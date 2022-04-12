@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-interface PlayerRanking {
+export interface PlayerRanking {
   id: string;
   name: string;
   points: number;

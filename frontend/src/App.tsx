@@ -1,11 +1,14 @@
 import React from "react";
+import Header from "./components/Header";
 import Ranking from "./components/Ranking";
 
 function App() {
   return (
     <div>
-      <header>Table tenis players ranking</header>
-      <Ranking />
+      <Header />
+      <main>
+        <Ranking />
+      </main>
     </div>
   );
 }
