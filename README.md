@@ -2,8 +2,8 @@
 
 ## Description
 
-Ranking inspired by <https://www.ittf.com/rankings/>
+Simplified version of table tenis players ranking inspired by <https://www.ittf.com/rankings/>
 
 ## Functionality
 
-List players ranking
+List players ranks
