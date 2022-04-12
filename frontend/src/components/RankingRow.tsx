@@ -11,7 +11,7 @@ export default function RankingRow(props: Props) {
   return (
     <tr className="border-b">
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-        {player.id}
+        {player.rank}
       </td>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
         {player.name}
