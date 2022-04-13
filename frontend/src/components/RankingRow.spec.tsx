@@ -3,7 +3,7 @@ import { PlayerRanking } from "../models/player";
 import RankingRow from "./RankingRow";
 
 describe("RankingRow", () => {
-  it("should display player content", async () => {
+  it("should display player content", () => {
     const player: PlayerRanking = {
       name: "Testname",
       id: "id1",

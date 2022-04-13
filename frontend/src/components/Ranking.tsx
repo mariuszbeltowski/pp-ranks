@@ -7,7 +7,7 @@ export default function Ranking() {
   const { loading, error, data } =
     useQuery<PlayersRankingData>(PLAYERS_RANKING);
 
-  if (error) return <div>{error}</div>;
+  if (error) return <div>{error.message}</div>;
 
   if (loading) return <div>Loading...</div>;
 

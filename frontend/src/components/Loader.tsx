@@ -4,6 +4,7 @@ function Loader() {
   return (
     <svg
       role="status"
+      aria-label="loader-indicator"
       className="w-4 h-4 text-gray-200 animate-spin dark:text-gray-800 fill-white block mx-auto"
       viewBox="0 0 100 101"
       fill="none"

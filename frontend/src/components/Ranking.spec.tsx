@@ -4,6 +4,7 @@ import { PLAYERS_RANKING } from "../queries/player-ranking";
 import { PlayerRanking } from "../models/player";
 import { getMockPlayerRanking } from "../lib/player-mock";
 import Ranking from "./Ranking";
+import { GraphQLError } from "graphql";
 
 const players: PlayerRanking[] = [
   getMockPlayerRanking("1", "player1"),
@@ -33,14 +34,13 @@ const mockedErrorData = [
       variables: {},
     },
     result: {
-      data: {},
-      error: new Error(errorMessage),
+      errors: [new GraphQLError(errorMessage)],
     },
   },
 ];
 
 describe("Ranking", () => {
-  it("should display loading", async () => {
+  it("should display loading", () => {
     const { getByText } = render(
       <MockedProvider>
         <Ranking />
@@ -67,6 +67,6 @@ describe("Ranking", () => {
         <Ranking />
       </MockedProvider>
     );
-    findByText(errorMessage);
+    await findByText(errorMessage);
   });
 });

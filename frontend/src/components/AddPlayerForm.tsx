@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import {
   AddPlayerData,
   AddPlayerVariables,
@@ -13,12 +13,12 @@ function AddPlayerForm() {
   const [addPlayer, { data, loading, error }] = useMutation<
     AddPlayerData,
     AddPlayerVariables
-  >(ADD_PLAYER, { variables: { name } });
+  >(ADD_PLAYER);
 
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (name.length > 0 && !loading) {
-      addPlayer();
+      addPlayer({ variables: { name } });
       setName("");
     }
   };
@@ -33,7 +33,8 @@ function AddPlayerForm() {
             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding
               border border-solid border-gray-300 rounded transition ease-in-out m-0
             focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-            id="exampleInput90"
+            id="nameInput"
+            aria-label="name-input"
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -41,7 +42,7 @@ function AddPlayerForm() {
           {error ? (
             <label
               className="inline-block p-2 text-red-800 motion-safe:fade-up"
-              htmlFor="exampleInput90"
+              htmlFor="nameInput"
             >
               {error.message}
             </label>
@@ -51,7 +52,7 @@ function AddPlayerForm() {
           {data ? (
             <label
               className="inline-block p-2 text-green-800 motion-safe:fade-up"
-              htmlFor="exampleInput90"
+              htmlFor="nameInput"
             >
               {`Player "${data.addPlayer.name}" created successfully`}
             </label>
@@ -61,7 +62,8 @@ function AddPlayerForm() {
         </div>
         <button
           type="submit"
-          disabled={loading || name.length == 0}
+          disabled={loading || name.length === 0}
+          aria-label="create-button"
           className="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg
             focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg
               transition duration-150 ease-in-out disabled:opacity-75"
