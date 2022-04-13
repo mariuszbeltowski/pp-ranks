@@ -1,72 +1,45 @@
-import { MockedProvider } from "@apollo/client/testing";
+import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import { render } from "@testing-library/react";
 import { PLAYERS_RANKING } from "../queries/player-ranking";
-import { PlayerRanking } from "../models/player";
-import { getMockPlayerRanking } from "../lib/player-mock";
+import { mockedPlayers, mockedPlayersData } from "../lib/player-mock";
 import Ranking from "./Ranking";
 import { GraphQLError } from "graphql";
 
-const players: PlayerRanking[] = [
-  getMockPlayerRanking("1", "player1"),
-  getMockPlayerRanking("2", "player2"),
-  getMockPlayerRanking("3", "player3"),
-];
-
-const mockedPlayersData = [
-  {
-    request: {
-      query: PLAYERS_RANKING,
-      variables: {},
-    },
-    result: {
-      data: {
-        players,
-      },
-    },
-  },
-];
-
 const errorMessage = "An error occurred";
-const mockedErrorData = [
-  {
-    request: {
-      query: PLAYERS_RANKING,
-      variables: {},
-    },
-    result: {
-      errors: [new GraphQLError(errorMessage)],
-    },
+const mockedErrorData = {
+  request: {
+    query: PLAYERS_RANKING,
+    variables: {},
   },
-];
+  result: {
+    errors: [new GraphQLError(errorMessage)],
+  },
+};
+
+const create = (mocks?: ReadonlyArray<MockedResponse>) => {
+  return render(
+    <MockedProvider mocks={mocks} addTypename={false}>
+      <Ranking />
+    </MockedProvider>
+  );
+};
 
 describe("Ranking", () => {
   it("should display loading", () => {
-    const { getByText } = render(
-      <MockedProvider>
-        <Ranking />
-      </MockedProvider>
-    );
+    const { getByText } = create();
     getByText("Loading...");
   });
 
   it("should display RankingRows", async () => {
-    const { findAllByText } = render(
-      <MockedProvider mocks={mockedPlayersData} addTypename={false}>
-        <Ranking />
-      </MockedProvider>
-    );
+    const { findAllByText } = create([mockedPlayersData]);
 
-    await findAllByText(players[0].name);
-    await findAllByText(players[1].name);
-    await findAllByText(players[2].name);
+    await findAllByText(mockedPlayers[0].name);
+    await findAllByText(mockedPlayers[1].name);
+    await findAllByText(mockedPlayers[2].name);
   });
 
   it("should display error", async () => {
-    const { findByText } = render(
-      <MockedProvider mocks={mockedErrorData}>
-        <Ranking />
-      </MockedProvider>
-    );
+    const { findByText } = create([mockedErrorData]);
     await findByText(errorMessage);
   });
 });

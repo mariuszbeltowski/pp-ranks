@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import {
   RegisterMatchScoreData,
   RegisterMatchScoreVariables,
@@ -20,14 +20,12 @@ function RegisterMatchForm() {
     RegisterMatchScoreVariables
   >(REGISTER_MATCH_SCORE);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (winningPlayerId !== EMPTY_SELECT && lostPlayerId !== EMPTY_SELECT) {
       registerMatch({ variables: { winningPlayerId, lostPlayerId } });
+      setWinningPlayerId(EMPTY_SELECT);
+      setLostPlayerId(EMPTY_SELECT);
     }
   };
 
@@ -45,7 +43,7 @@ function RegisterMatchForm() {
             text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300
               rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white 
               focus:border-blue-600 focus:outline-none"
-            aria-label="winning-player"
+            aria-label="winning-select"
           >
             <option value={EMPTY_SELECT}>Open this select menu</option>
             {playersData?.players.map((player) => (
@@ -64,7 +62,7 @@ function RegisterMatchForm() {
             text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300
               rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white 
               focus:border-blue-600 focus:outline-none"
-            aria-label="lost-player"
+            aria-label="lost-select"
           >
             <option value={EMPTY_SELECT}>Open this select menu</option>
             {playersData?.players.map((player) => (
@@ -95,7 +93,7 @@ function RegisterMatchForm() {
             winningPlayerId === EMPTY_SELECT ||
             lostPlayerId === EMPTY_SELECT
           }
-          aria-label="create-button"
+          aria-label="register-button"
           className="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg
             focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg
               transition duration-150 ease-in-out disabled:opacity-75"
