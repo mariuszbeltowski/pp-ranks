@@ -6,6 +6,8 @@ import reportWebVitals from "./reportWebVitals";
 import { ApolloProvider } from "@apollo/client";
 import { apolloClient } from "./lib/apollo-client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Admin from "./routes/Admin";
+import NotFound from "./routes/NotFound";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -13,6 +15,8 @@ ReactDOM.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />
+          <Route path="admin" element={<Admin />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </ApolloProvider>

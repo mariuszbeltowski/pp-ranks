@@ -84,6 +84,13 @@ export const rankingMock: Player[] = [
 ];
 
 export function addPlayer(name: string) {
+  if (rankingMock.find((player) => player.name === name)) {
+    throw new ApolloError(
+      `Player with name "${name}" already exists`,
+      "PLAYER_NAME_ALREADY_EXISTS"
+    );
+  }
+
   const newPlayer: Player = {
     id: randomUUID(),
     rank: rankingMock.length + 1,

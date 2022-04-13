@@ -1,4 +1,4 @@
-import { PlayerRanking } from "../queries/player-ranking";
+import { PlayerRanking } from "../models/player";
 
 export function getMockPlayerRanking(id: string, name: string): PlayerRanking {
   return {

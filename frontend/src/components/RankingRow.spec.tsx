@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import { PlayerRanking } from "../queries/player-ranking";
+import { PlayerRanking } from "../models/player";
 import RankingRow from "./RankingRow";
 
 describe("RankingRow", () => {

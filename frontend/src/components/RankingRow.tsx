@@ -1,5 +1,5 @@
 import React from "react";
-import { PlayerRanking } from "../queries/player-ranking";
+import { PlayerRanking } from "../models/player";
 
 interface Props {
   player: PlayerRanking;

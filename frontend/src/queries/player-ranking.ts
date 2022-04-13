@@ -1,12 +1,5 @@
 import { gql } from "@apollo/client";
-
-export interface PlayerRanking {
-  id: string;
-  rank: number;
-  name: string;
-  points: number;
-}
-
+import { PlayerRanking } from "../models/player";
 export interface PlayersRankingData {
   players: PlayerRanking[];
 }
