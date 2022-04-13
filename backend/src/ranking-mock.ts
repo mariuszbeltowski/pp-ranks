@@ -106,6 +106,9 @@ export function registerMatchScore(
   winningPlayerId: string,
   lostPlayerId: string
 ) {
+  if (winningPlayerId === lostPlayerId) {
+    throw new ApolloError("Provided players are the same", "SAME_PLAYERS");
+  }
   const winningPlayer = rankingMock.find(
     (player) => player.id === winningPlayerId
   );

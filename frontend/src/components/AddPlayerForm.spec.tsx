@@ -4,6 +4,7 @@ import { getMockPlayerRanking } from "../lib/player-mock";
 import AddPlayerForm from "./AddPlayerForm";
 import { ADD_PLAYER } from "../queries/admin";
 import userEvent from "@testing-library/user-event";
+import { GraphQLError } from "graphql";
 
 const playerName = "player1";
 const mockedPlayer = getMockPlayerRanking("1", playerName);
@@ -21,18 +22,15 @@ const mockedCreatePlayerMutationData: MockedResponse = {
 };
 
 const errorMessage = "An error occurred";
-const mockedErrorData = [
-  {
-    request: {
-      query: ADD_PLAYER,
-      variables: {},
-    },
-    result: {
-      data: {},
-      error: new Error(errorMessage),
-    },
+const mockedErrorData = {
+  request: {
+    query: ADD_PLAYER,
+    variables: { name: playerName },
   },
-];
+  result: {
+    errors: [new GraphQLError(errorMessage)],
+  },
+};
 
 const setup = (mocks?: ReadonlyArray<MockedResponse>) => {
   const utils = render(

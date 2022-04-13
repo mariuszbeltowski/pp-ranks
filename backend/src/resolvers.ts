@@ -21,7 +21,11 @@ interface AddPlayerRequest {
 
 export const resolvers = {
   Query: {
-    players: () => rankingMock,
+    players: () =>
+      rankingMock.map((player) => ({
+        ...player,
+        points: Math.floor(player.points),
+      })),
   },
   Mutation: {
     registerMatchScore: (

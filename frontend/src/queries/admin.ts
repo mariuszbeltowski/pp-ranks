@@ -19,3 +19,38 @@ export const ADD_PLAYER = gql`
     }
   }
 `;
+
+export interface RegisterMatchScoreVariables {
+  winningPlayerId: string;
+  lostPlayerId: string;
+}
+
+interface RegisterMatchScore {
+  winningPlayer: PlayerRanking;
+  lostPlayer: PlayerRanking;
+}
+export interface RegisterMatchScoreData {
+  registerMatchScore: RegisterMatchScore;
+}
+
+export const REGISTER_MATCH_SCORE = gql`
+  mutation RegisterMatchScore($winningPlayerId: ID!, $lostPlayerId: ID!) {
+    registerMatchScore(
+      winningPlayerId: $winningPlayerId
+      lostPlayerId: $lostPlayerId
+    ) {
+      winningPlayer {
+        id
+        rank
+        name
+        points
+      }
+      lostPlayer {
+        id
+        rank
+        name
+        points
+      }
+    }
+  }
+`;
