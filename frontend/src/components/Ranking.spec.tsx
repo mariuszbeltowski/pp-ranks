@@ -1,8 +1,8 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render } from "@testing-library/react";
 import { PlayerRanking, PLAYERS_RANKING } from "../queries/player-ranking";
-import { getMockPlayerRanking } from "./player-mock";
-import Ranking from "../components/Ranking";
+import { getMockPlayerRanking } from "../lib/player-mock";
+import Ranking from "./Ranking";
 
 const players: PlayerRanking[] = [
   getMockPlayerRanking("1", "player1"),

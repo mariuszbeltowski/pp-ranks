@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { PlayerRanking } from "../queries/player-ranking";
-import RankingRow from "../components/RankingRow";
+import RankingRow from "./RankingRow";
 
 describe("RankingRow", () => {
   it("should display player content", async () => {
