@@ -7,9 +7,11 @@ function Ranking() {
   const { loading, error, data } =
     useQuery<PlayersRankingData>(PLAYERS_RANKING);
 
-  if (error) return <div>{error.message}</div>;
+  if (error)
+    return <div className="mx-auto max-w-md text-center">{error.message}</div>;
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return <div className="mx-auto max-w-md text-center">Loading...</div>;
 
   return (
     <div className="flex flex-col mx-auto max-w-md md:max-w-2xl">
