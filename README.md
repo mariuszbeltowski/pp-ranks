@@ -17,6 +17,11 @@ Adminpanel (/admin):
 - Add new player
 - Register match score
 
+Others:
+
+- Ranking has pooling interval 500ms by default
+- Both form buttons have loader and server side validation.
+
 ## Tech stack
 
 ### Frontend libs
@@ -39,7 +44,7 @@ Adminpanel (/admin):
 
 ### Database
 
-- Use docker `docker run --rm -p 27017:27017 --name mongodb mongo:5.0.7`
+Use docker with mongodb `docker run --rm -p 27017:27017 --name mongodb mongo:5.0.7`
 
 ### Frontend
 

@@ -10,6 +10,7 @@ import { typeDefs } from "./type-defs";
 
 createMongoDatabaseClient().then(
   async ({ client, db }) => {
+    // Basic DI
     const rankingService = new RankingService(
       config.eloAlgorithmShiftingFactor
     );
@@ -20,16 +21,19 @@ createMongoDatabaseClient().then(
     const playerRepository = new PlayerRepository(client, playerCollection);
     const playerService = new PlayerService(playerRepository, rankingService);
 
+    // Prepare the DB
     await playerService.removeAll();
     console.log("All existing players were removed");
 
     await playerService.populateMockData();
     console.log("Populated players collection with mocked names");
 
+    // Setup API
     const resolvers = getResolvers(playerService);
 
     const server = new ApolloServer({ typeDefs, resolvers });
 
+    // Start the server
     server.listen().then(({ url }) => {
       console.log(`🚀  Server ready at ${url}`);
     });

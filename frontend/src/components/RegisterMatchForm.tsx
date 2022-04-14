@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { FormEvent, useState } from "react";
+import { config } from "../config";
 import {
   RegisterMatchScoreData,
   RegisterMatchScoreVariables,
@@ -13,7 +14,9 @@ function RegisterMatchForm() {
     data: playersData,
     error: playersError,
     loading: playersLoading,
-  } = useQuery<PlayersRankingData>(PLAYERS_RANKING);
+  } = useQuery<PlayersRankingData>(PLAYERS_RANKING, {
+    pollInterval: config.rankingPoolIntervalMs,
+  });
 
   const EMPTY_SELECT = "none";
   const [winningPlayerId, setWinningPlayerId] = useState(EMPTY_SELECT);
