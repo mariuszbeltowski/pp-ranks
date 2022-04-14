@@ -1,0 +1,21 @@
+version: "2"
+
+services:
+  mongodb:
+    image: "mongo:5.0.7"
+    ports:
+      - "27017:27017" # expose port for local development
+
+  backend:
+    build: "./backend"
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_CONNECTION_STRING=mongodb://mongodb:27017
+
+  frontend:
+    build: "./frontend"
+    ports:
+      - "3000:3000"

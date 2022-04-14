@@ -42,6 +42,16 @@ Others:
 
 ## How to run
 
+### Single command setup
+
+To setup whole app with one command, please use `docker-compose up` in project root directory.
+
+It can take even 5-10 minutes for the first time to pull deps, build backend and frontend.
+
+Navigate to <http://localhost:3000/> and <http://localhost:3000/admin>
+
+If you are missing docker-compose, go to <https://docs.docker.com/compose/install/> or use manual steps below.
+
 ### Database
 
 Use docker with mongodb `docker run --rm -p 27017:27017 --name mongodb mongo:5.0.7`
