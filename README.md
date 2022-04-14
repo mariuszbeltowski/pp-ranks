@@ -17,6 +17,24 @@ Adminpanel (/admin):
 - Add new player
 - Register match score
 
+## Tech stack
+
+### Frontend libs
+
+- React
+- Apollo client & graphql
+- Typescript
+- Tailwind CSS - to quickly provide some styling
+- Testing: Jest
+
+### Backend libs
+
+- Node.js
+- Apollo server & graphql
+- Typescript
+- Storage: mongodb
+- Testing: Jest
+
 ## How to run
 
 ### Database
