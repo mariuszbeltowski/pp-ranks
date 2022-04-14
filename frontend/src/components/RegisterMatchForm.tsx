@@ -9,7 +9,11 @@ import { PlayersRankingData, PLAYERS_RANKING } from "../queries/player-ranking";
 import Loader from "./Loader";
 
 function RegisterMatchForm() {
-  const { data: playersData } = useQuery<PlayersRankingData>(PLAYERS_RANKING);
+  const {
+    data: playersData,
+    error: playersError,
+    loading: playersLoading,
+  } = useQuery<PlayersRankingData>(PLAYERS_RANKING);
 
   const EMPTY_SELECT = "none";
   const [winningPlayerId, setWinningPlayerId] = useState(EMPTY_SELECT);
@@ -28,6 +32,14 @@ function RegisterMatchForm() {
       setLostPlayerId(EMPTY_SELECT);
     }
   };
+
+  if (playersError)
+    return (
+      <div className="mx-auto max-w-md text-center">{playersError.message}</div>
+    );
+
+  if (playersLoading)
+    return <div className="mx-auto max-w-md text-center">Loading...</div>;
 
   return (
     <div className="mx-auto block p-6 rounded-lg shadow-lg bg-white max-w-sm mb-10">
