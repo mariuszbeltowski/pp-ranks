@@ -1,5 +1,4 @@
 import { getMockedPlayer } from "../utils/player-mocks";
-import { Player } from "./player";
 import { RankedPlayer } from "./ranked-player";
 
 describe("RankedPlayer", () => {
