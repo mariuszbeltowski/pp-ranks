@@ -4,9 +4,18 @@
 
 Simplified version of table tenis players ranking inspired by <https://www.ittf.com/rankings/>
 
+Ranking algorithm is based on Elo rating system (<https://en.wikipedia.org/wiki/Elo_rating_system>)
+
 ## Functionality
 
-List players ranks
+Homepage (/):
+
+- List players ranks
+
+Adminpanel (/admin):
+
+- Add new player
+- Register match score
 
 ## How to run
 

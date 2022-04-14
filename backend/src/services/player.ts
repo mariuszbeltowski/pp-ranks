@@ -1,21 +1,15 @@
 import { ApolloError } from "apollo-server";
-import { Collection, Db, MongoClient, ObjectId } from "mongodb";
-import { config } from "../config";
-
+import { Collection, MongoClient } from "mongodb";
 import { Player, mockPlayersNames } from "../models/player";
 import { RankedPlayer } from "../models/ranked-player";
 import { RankingService } from "./ranking";
 
 export class PlayerService {
-  collection: Collection<Player>;
-
   constructor(
     private dbClient: MongoClient,
-    private db: Db,
+    private collection: Collection<Player>,
     private rankingService: RankingService
-  ) {
-    this.collection = db.collection<Player>(config.mongo.playersCollection);
-  }
+  ) {}
 
   async addPlayer(name: string) {
     const existingPlayer = await this.collection.findOne({ name });
@@ -38,45 +32,52 @@ export class PlayerService {
       throw new ApolloError("Provided players are the same", "SAME_PLAYERS");
     }
 
-    const winningPlayer = await this.collection.findOne({
-      _id: winningPlayerId,
-    });
+    const dbSession = this.dbClient.startSession();
+    try {
+      await dbSession.withTransaction(async () => {
+        const winningPlayer = await this.collection.findOne({
+          _id: winningPlayerId,
+        });
 
-    if (!winningPlayer) {
-      throw new ApolloError(
-        "Winning player not found",
-        "WINNING_PLAYER_NOT_FOUND"
-      );
+        if (!winningPlayer) {
+          throw new ApolloError(
+            "Winning player not found",
+            "WINNING_PLAYER_NOT_FOUND"
+          );
+        }
+
+        const lostPlayer = await this.collection.findOne({
+          _id: lostPlayerId,
+        });
+
+        if (!lostPlayer) {
+          throw new ApolloError(
+            "Lost player not found",
+            "LOST_PLAYER_NOT_FOUND"
+          );
+        }
+
+        const { winningPlayerPoints, lostPlayerPoints } =
+          this.rankingService.calculatePlayersPoints(
+            winningPlayer.points,
+            lostPlayer.points
+          );
+
+        await this.updatePlayerPoints(winningPlayerId, winningPlayerPoints);
+        await this.updatePlayerPoints(lostPlayerId, lostPlayerPoints);
+      });
+    } finally {
+      dbSession.endSession();
     }
-
-    const lostPlayer = await this.collection.findOne({
-      _id: lostPlayerId,
-    });
-
-    if (!lostPlayer) {
-      throw new ApolloError("Lost player not found", "LOST_PLAYER_NOT_FOUND");
-    }
-
-    const { winningPlayerPoints, lostPlayerPoints } =
-      this.rankingService.calculatePlayersPoints(
-        winningPlayer.points,
-        lostPlayer.points
-      );
-
-    await this.collection.updateOne(
-      { _id: winningPlayerId },
-      { $set: { points: winningPlayerPoints } }
-    );
-
-    await this.collection.updateOne(
-      { _id: lostPlayerId },
-      { $set: { points: lostPlayerPoints } }
-    );
 
     return {
       lostPlayer: (await this.getRankedPlayer(lostPlayerId))!,
       winningPlayer: (await this.getRankedPlayer(winningPlayerId))!,
     };
+  }
+
+  async updatePlayerPoints(_id: string, points: number) {
+    return this.collection.updateOne({ _id }, { $set: { points } });
   }
 
   async getRankedPlayers() {
