@@ -1,11 +1,11 @@
 import { RankingService } from "./ranking.service";
 
-const create = (eloAlgorithmShiftingFactor: number) =>
+const setup = (eloAlgorithmShiftingFactor: number) =>
   new RankingService(eloAlgorithmShiftingFactor);
 
 describe("RankingService", () => {
   it("should make even distributon for players with the same ranking", () => {
-    const rankingService = create(10);
+    const rankingService = setup(10);
 
     const { winningPlayerPoints, lostPlayerPoints } =
       rankingService.calculatePlayersPoints(100, 100);
@@ -15,7 +15,7 @@ describe("RankingService", () => {
   });
 
   it("should calculate for lostPlayer higher ranking", () => {
-    const rankingService = create(10);
+    const rankingService = setup(10);
 
     const { winningPlayerPoints, lostPlayerPoints } =
       rankingService.calculatePlayersPoints(95, 105);
@@ -25,7 +25,7 @@ describe("RankingService", () => {
   });
 
   it("should calculate for winningPlayer higher ranking", () => {
-    const rankingService = create(10);
+    const rankingService = setup(10);
 
     const { winningPlayerPoints, lostPlayerPoints } =
       rankingService.calculatePlayersPoints(105, 95);
@@ -35,7 +35,7 @@ describe("RankingService", () => {
   });
 
   it("should calculate for higher shifting factor than ranking", () => {
-    const rankingService = create(200);
+    const rankingService = setup(200);
 
     const { winningPlayerPoints, lostPlayerPoints } =
       rankingService.calculatePlayersPoints(100, 100);
@@ -45,7 +45,7 @@ describe("RankingService", () => {
   });
 
   it("should calculate for negative ranking", () => {
-    const rankingService = create(200);
+    const rankingService = setup(200);
 
     const { winningPlayerPoints, lostPlayerPoints } =
       rankingService.calculatePlayersPoints(50, 50);

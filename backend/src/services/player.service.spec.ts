@@ -6,7 +6,7 @@ import { RankingService } from "./ranking.service";
 import { PlayerRepository } from "../repositories/player.repository";
 import { getMockedPlayer } from "../utils/player-mocks";
 
-const create = () => {
+const setup = () => {
   const rankingService = new RankingService(10) as jest.Mocked<RankingService>;
 
   const playerRepository = new PlayerRepository(
@@ -23,7 +23,7 @@ const create = () => {
 
 describe("PlayerService", () => {
   it("should add player and return", async () => {
-    const { playerService, playerRepository } = create();
+    const { playerService, playerRepository } = setup();
 
     const player = { name: "Player 1", points: 100, id: "player1" };
     playerRepository.addPlayer.mockResolvedValueOnce({
@@ -48,7 +48,7 @@ describe("PlayerService", () => {
   });
 
   it("should get ranked players with correct ranks", async () => {
-    const { playerService, playerRepository } = create();
+    const { playerService, playerRepository } = setup();
 
     const players = [
       getMockedPlayer({ name: "Player 3", points: 300, id: "player3" }),
@@ -67,7 +67,7 @@ describe("PlayerService", () => {
   });
 
   it("should purge to remove all", async () => {
-    const { playerService, playerRepository } = create();
+    const { playerService, playerRepository } = setup();
 
     await playerService.removeAll();
 
@@ -75,7 +75,7 @@ describe("PlayerService", () => {
   });
 
   it("should fail register match score for the same ids", async () => {
-    const { playerService } = create();
+    const { playerService } = setup();
 
     await expect(
       playerService.registerMatchScore("p1", "p1")
@@ -83,7 +83,7 @@ describe("PlayerService", () => {
   });
 
   it("should fail register match score if winner is not found", async () => {
-    const { playerService, playerRepository } = create();
+    const { playerService, playerRepository } = setup();
 
     const players = [
       getMockedPlayer({ name: "Player 2", points: 200, id: "p2" }),
@@ -102,7 +102,7 @@ describe("PlayerService", () => {
   });
 
   it("should fail register match score if lost is not found", async () => {
-    const { playerService, playerRepository } = create();
+    const { playerService, playerRepository } = setup();
 
     const players = [
       getMockedPlayer({ name: "Player 1", points: 100, id: "p1" }),
@@ -119,7 +119,7 @@ describe("PlayerService", () => {
   });
 
   it("should register match score and update players", async () => {
-    const { playerService, playerRepository, rankingService } = create();
+    const { playerService, playerRepository, rankingService } = setup();
 
     const winningId = "p1";
     const lostId = "p2";
