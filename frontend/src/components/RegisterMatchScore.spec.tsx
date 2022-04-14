@@ -33,45 +33,60 @@ const setup = (mocks?: ReadonlyArray<MockedResponse>) => {
     </MockedProvider>
   );
 
-  const { getByLabelText } = utils;
-  const winningSelect = getByLabelText("winning-select") as HTMLSelectElement;
-  const lostSelect = getByLabelText("lost-select") as HTMLSelectElement;
-  const button = getByLabelText("register-button") as HTMLButtonElement;
+  const { findByLabelText } = utils;
+  const findWinningSelect = () =>
+    findByLabelText("winning-select") as Promise<HTMLSelectElement>;
+  const findLostSelect = () =>
+    findByLabelText("lost-select") as Promise<HTMLSelectElement>;
+  const findButton = () =>
+    findByLabelText("register-button") as Promise<HTMLButtonElement>;
 
   const setWinningSelect = async (name: string) =>
     userEvent.selectOptions(
-      winningSelect,
+      await findWinningSelect(),
       (await utils.findAllByRole("option", { name }))[0]
     );
 
   const setLostSelect = async (name: string) =>
     userEvent.selectOptions(
-      lostSelect,
+      await findLostSelect(),
       (await utils.findAllByRole("option", { name }))[1]
     );
 
   return {
-    winningSelect,
-    lostSelect,
+    findWinningSelect,
+    findLostSelect,
     setWinningSelect,
     setLostSelect,
-    button,
+    findButton,
     ...utils,
   };
 };
 
 describe("AddPlayerForm", () => {
-  it("should render", () => {
+  it("should render", async () => {
+    const { findByText } = setup([mockedPlayersData]);
+    await findByText("Register match score");
+  });
+
+  it("should display loading", async () => {
     const { getByText } = setup();
-    getByText("Register match score");
+    getByText("Loading...");
   });
 
   it("select changes should update select values", async () => {
-    const { winningSelect, lostSelect, setWinningSelect, setLostSelect } =
-      setup([mockedPlayersData]);
+    const {
+      findWinningSelect,
+      findLostSelect,
+      setWinningSelect,
+      setLostSelect,
+    } = setup([mockedPlayersData]);
 
     await setWinningSelect(winningPlayer.name);
     await setLostSelect(lostPlayer.name);
+
+    const lostSelect = await findLostSelect();
+    const winningSelect = await findWinningSelect();
 
     expect(winningSelect.value).toBe(winningPlayer.id);
     expect(lostSelect.value).toBe(lostPlayer.id);
@@ -79,43 +94,44 @@ describe("AddPlayerForm", () => {
 
   it("should clear selects after submit", async () => {
     const {
-      winningSelect,
-      lostSelect,
+      findWinningSelect,
+      findLostSelect,
       setWinningSelect,
       setLostSelect,
-      button,
+      findButton,
     } = setup([mockedPlayersData, mockedRegisterMatchScoreMutationData]);
 
     await setWinningSelect(winningPlayer.name);
     await setLostSelect(lostPlayer.name);
-    userEvent.click(button);
+    userEvent.click(await findButton());
+
+    const lostSelect = await findLostSelect();
+    const winningSelect = await findWinningSelect();
 
     expect(winningSelect.value).toBe("none");
     expect(lostSelect.value).toBe("none");
   });
 
   it("should show loader after submit", async () => {
-    const { setWinningSelect, setLostSelect, button, getByLabelText } = setup([
-      mockedPlayersData,
-      mockedRegisterMatchScoreMutationData,
-    ]);
+    const { setWinningSelect, setLostSelect, findButton, getByLabelText } =
+      setup([mockedPlayersData, mockedRegisterMatchScoreMutationData]);
 
     await setWinningSelect(winningPlayer.name);
     await setLostSelect(lostPlayer.name);
-    userEvent.click(button);
+    userEvent.click(await findButton());
 
     getByLabelText("loader-indicator");
   });
 
   it("should show usernames after successful submit", async () => {
-    const { setWinningSelect, setLostSelect, button, findByText } = setup([
+    const { setWinningSelect, setLostSelect, findButton, findByText } = setup([
       mockedPlayersData,
       mockedRegisterMatchScoreMutationData,
     ]);
 
     await setWinningSelect(winningPlayer.name);
     await setLostSelect(lostPlayer.name);
-    userEvent.click(button);
+    userEvent.click(await findButton());
 
     await findByText(new RegExp(`"${winningPlayer.name}"`));
     await findByText(new RegExp(`"${lostPlayer.name}"`));
