@@ -3,9 +3,9 @@ import { config } from "./config";
 import { Player } from "./models/player";
 import { PlayerRepository } from "./repositories/player.repository";
 import { getResolvers } from "./resolvers";
-import { createMongoDatabaseClient } from "./services/mongo";
-import { PlayerService } from "./services/player";
-import { RankingService } from "./services/ranking";
+import { createMongoDatabaseClient } from "./utils/mongo";
+import { PlayerService } from "./services/player.service";
+import { RankingService } from "./services/ranking.service";
 import { typeDefs } from "./type-defs";
 
 createMongoDatabaseClient().then(

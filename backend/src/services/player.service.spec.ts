@@ -1,8 +1,8 @@
-jest.mock("./ranking");
+jest.mock("./ranking.service");
 jest.mock("../repositories/player.repository");
 
-import { PlayerService } from "./player";
-import { RankingService } from "./ranking";
+import { PlayerService } from "./player.service";
+import { RankingService } from "./ranking.service";
 import { PlayerRepository } from "../repositories/player.repository";
 import { getMockedPlayer } from "../utils/player-mocks";
 

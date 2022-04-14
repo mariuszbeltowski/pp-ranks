@@ -2,7 +2,7 @@ import { ApolloError } from "apollo-server";
 import { Player, mockPlayersNames } from "../models/player";
 import { RankedPlayer } from "../models/ranked-player";
 import { PlayerRepository } from "../repositories/player.repository";
-import { RankingService } from "./ranking";
+import { RankingService } from "./ranking.service";
 
 export class PlayerService {
   constructor(
@@ -10,7 +10,7 @@ export class PlayerService {
     private rankingService: RankingService
   ) {}
 
-  async addPlayer(name: string): Promise<RankedPlayer> {
+  async addPlayer(name: string) {
     const newPlayer = new Player(name);
     const inserted = await this.playerRepository.addPlayer(newPlayer);
 

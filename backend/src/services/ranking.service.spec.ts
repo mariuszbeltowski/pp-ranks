@@ -1,4 +1,4 @@
-import { RankingService } from "./ranking";
+import { RankingService } from "./ranking.service";
 
 const create = (eloAlgorithmShiftingFactor: number) =>
   new RankingService(eloAlgorithmShiftingFactor);

@@ -1,5 +1,5 @@
 import { RankedPlayer } from "./models/ranked-player";
-import { PlayerService } from "./services/player";
+import { PlayerService } from "./services/player.service";
 
 interface RegisterMatchScoreRequest {
   winningPlayerId: string;

@@ -1,5 +1,5 @@
 import { ApolloError } from "apollo-server";
-import { Collection, InsertOneResult, MongoClient } from "mongodb";
+import { Collection, MongoClient } from "mongodb";
 import { Player } from "../models/player";
 
 export class PlayerRepository {
@@ -8,7 +8,7 @@ export class PlayerRepository {
     private collection: Collection<Player>
   ) {}
 
-  async addPlayer(player: Player): Promise<InsertOneResult<Player>> {
+  async addPlayer(player: Player) {
     const { name } = player;
     const dbSession = this.dbClient.startSession();
     try {
