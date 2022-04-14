@@ -22,7 +22,9 @@ function RegisterMatchForm() {
   const [registerMatch, { data, loading, error }] = useMutation<
     RegisterMatchScoreData,
     RegisterMatchScoreVariables
-  >(REGISTER_MATCH_SCORE);
+  >(REGISTER_MATCH_SCORE, {
+    onError: () => console.log("Register match score mutation failed"),
+  });
 
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

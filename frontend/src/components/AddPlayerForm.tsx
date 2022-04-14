@@ -13,7 +13,7 @@ function AddPlayerForm() {
   const [addPlayer, { data, loading, error }] = useMutation<
     AddPlayerData,
     AddPlayerVariables
-  >(ADD_PLAYER);
+  >(ADD_PLAYER, { onError: () => console.log("Add player mutation failed") });
 
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -96,4 +96,13 @@ describe("AddPlayerForm", () => {
 
     await findByText(new RegExp(playerName));
   });
+
+  it("should show error after unsuccessful submit", async () => {
+    const { input, button, findByText } = setup([mockedErrorData]);
+
+    fireEvent.change(input, { target: { value: playerName } });
+    userEvent.click(button);
+
+    await findByText(errorMessage);
+  });
 });

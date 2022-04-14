@@ -1,7 +1,13 @@
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { mockedPlayers, mockedPlayersData } from "../lib/player-mock";
+import { GraphQLError } from "graphql";
+import {
+  errorMessage,
+  mockedPlayers,
+  mockedPlayersData,
+  mockedPlayersErrorData,
+} from "../lib/player-mock";
 import { REGISTER_MATCH_SCORE } from "../queries/admin";
 import RegisterMatchForm from "./RegisterMatchForm";
 
@@ -23,6 +29,16 @@ const mockedRegisterMatchScoreMutationData: MockedResponse = {
         lostPlayer,
       },
     },
+  },
+};
+
+const mockedRegisterMatchScoreMutationErrorData: MockedResponse = {
+  request: {
+    query: REGISTER_MATCH_SCORE,
+    variables: { winningPlayerId, lostPlayerId },
+  },
+  result: {
+    errors: [new GraphQLError(errorMessage)],
   },
 };
 
@@ -135,5 +151,24 @@ describe("AddPlayerForm", () => {
 
     await findByText(new RegExp(`"${winningPlayer.name}"`));
     await findByText(new RegExp(`"${lostPlayer.name}"`));
+  });
+
+  it("should show error if players query fail", async () => {
+    const { findByText } = setup([mockedPlayersErrorData]);
+
+    await findByText(errorMessage);
+  });
+
+  it("should show error if register match score mutation fail", async () => {
+    const { setWinningSelect, setLostSelect, findButton, findByText } = setup([
+      mockedPlayersData,
+      mockedRegisterMatchScoreMutationErrorData,
+    ]);
+
+    await setWinningSelect(winningPlayer.name);
+    await setLostSelect(lostPlayer.name);
+    userEvent.click(await findButton());
+
+    await findByText(errorMessage);
   });
 });

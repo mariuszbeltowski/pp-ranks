@@ -1,22 +1,14 @@
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import { render } from "@testing-library/react";
-import { PLAYERS_RANKING } from "../queries/player-ranking";
-import { mockedPlayers, mockedPlayersData } from "../lib/player-mock";
+import {
+  errorMessage,
+  mockedPlayersErrorData,
+  mockedPlayers,
+  mockedPlayersData,
+} from "../lib/player-mock";
 import Ranking from "./Ranking";
-import { GraphQLError } from "graphql";
 
-const errorMessage = "An error occurred";
-const mockedErrorData = {
-  request: {
-    query: PLAYERS_RANKING,
-    variables: {},
-  },
-  result: {
-    errors: [new GraphQLError(errorMessage)],
-  },
-};
-
-const create = (mocks?: ReadonlyArray<MockedResponse>) => {
+const setup = (mocks?: ReadonlyArray<MockedResponse>) => {
   return render(
     <MockedProvider mocks={mocks} addTypename={false}>
       <Ranking />
@@ -26,12 +18,12 @@ const create = (mocks?: ReadonlyArray<MockedResponse>) => {
 
 describe("Ranking", () => {
   it("should display loading", () => {
-    const { getByText } = create();
+    const { getByText } = setup();
     getByText("Loading...");
   });
 
   it("should display RankingRows", async () => {
-    const { findAllByText } = create([mockedPlayersData]);
+    const { findAllByText } = setup([mockedPlayersData]);
 
     await findAllByText(mockedPlayers[0].name);
     await findAllByText(mockedPlayers[1].name);
@@ -39,7 +31,7 @@ describe("Ranking", () => {
   });
 
   it("should display error", async () => {
-    const { findByText } = create([mockedErrorData]);
+    const { findByText } = setup([mockedPlayersErrorData]);
     await findByText(errorMessage);
   });
 });

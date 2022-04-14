@@ -1,3 +1,4 @@
+import { GraphQLError } from "graphql";
 import { RankedPlayer } from "../models/player";
 import { PLAYERS_RANKING } from "../queries/player-ranking";
 
@@ -16,6 +17,17 @@ export const mockedPlayersData = {
     data: {
       rankedPlayers: mockedPlayers,
     },
+  },
+};
+
+export const errorMessage = "An error occurred";
+export const mockedPlayersErrorData = {
+  request: {
+    query: PLAYERS_RANKING,
+    variables: {},
+  },
+  result: {
+    errors: [new GraphQLError(errorMessage)],
   },
 };
 
