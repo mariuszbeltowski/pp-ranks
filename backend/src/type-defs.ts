@@ -1,7 +1,7 @@
 import { gql } from "apollo-server";
 
 export const typeDefs = gql`
-  type Player {
+  type RankedPlayer {
     id: ID!
     rank: Int!
     name: String!
@@ -9,12 +9,12 @@ export const typeDefs = gql`
   }
 
   type Query {
-    players: [Player]
+    rankedPlayers: [RankedPlayer]
   }
 
   type RegisterMatchScoreResponse {
-    winningPlayer: Player!
-    lostPlayer: Player!
+    winningPlayer: RankedPlayer!
+    lostPlayer: RankedPlayer!
   }
 
   type Mutation {
@@ -23,6 +23,6 @@ export const typeDefs = gql`
       lostPlayerId: ID!
     ): RegisterMatchScoreResponse!
 
-    addPlayer(name: String!): Player!
+    addPlayer(name: String!): RankedPlayer!
   }
 `;

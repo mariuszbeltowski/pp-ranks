@@ -1,9 +1,5 @@
-import {
-  addPlayer,
-  Player,
-  rankingMock,
-  registerMatchScore,
-} from "./ranking-mock";
+import { RankedPlayer } from "./models/ranked-player";
+import { PlayerService } from "./services/player";
 
 interface RegisterMatchScoreRequest {
   winningPlayerId: string;
@@ -11,30 +7,30 @@ interface RegisterMatchScoreRequest {
 }
 
 interface RegisterMatchScoreResponse {
-  winningPlayer: Player;
-  lostPlayer: Player;
+  winningPlayer: RankedPlayer;
+  lostPlayer: RankedPlayer;
 }
 
 interface AddPlayerRequest {
   name: string;
 }
 
-export const resolvers = {
-  Query: {
-    players: () =>
-      rankingMock.map((player) => ({
-        ...player,
-        points: Math.floor(player.points),
-      })),
-  },
-  Mutation: {
-    registerMatchScore: (
-      _: never,
-      { winningPlayerId, lostPlayerId }: RegisterMatchScoreRequest
-    ): RegisterMatchScoreResponse =>
-      registerMatchScore(winningPlayerId, lostPlayerId),
+export function getResolvers(playerService: PlayerService) {
+  return {
+    Query: {
+      rankedPlayers: async () => playerService.getRankedPlayers(),
+    },
+    Mutation: {
+      registerMatchScore: async (
+        _: never,
+        { winningPlayerId, lostPlayerId }: RegisterMatchScoreRequest
+      ): Promise<RegisterMatchScoreResponse> =>
+        playerService.registerMatchScore(winningPlayerId, lostPlayerId),
 
-    addPlayer: (_: never, { name }: AddPlayerRequest): Player =>
-      addPlayer(name),
-  },
-};
+      addPlayer: async (
+        _: never,
+        { name }: AddPlayerRequest
+      ): Promise<RankedPlayer> => playerService.addPlayer(name),
+    },
+  };
+}

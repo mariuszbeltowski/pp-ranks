@@ -3,7 +3,7 @@ import React from "react";
 import { PlayersRankingData, PLAYERS_RANKING } from "../queries/player-ranking";
 import RankingRow from "./RankingRow";
 
-export default function Ranking() {
+function Ranking() {
   const { loading, error, data } =
     useQuery<PlayersRankingData>(PLAYERS_RANKING);
 
@@ -40,7 +40,7 @@ export default function Ranking() {
                 </tr>
               </thead>
               <tbody>
-                {data?.players.map((player) => (
+                {data?.rankedPlayers.map((player) => (
                   <RankingRow key={player.id} player={player} />
                 ))}
               </tbody>
@@ -51,3 +51,5 @@ export default function Ranking() {
     </div>
   );
 }
+
+export default Ranking;

@@ -1,10 +1,10 @@
 import { render } from "@testing-library/react";
-import { PlayerRanking } from "../models/player";
+import { RankedPlayer } from "../models/player";
 import RankingRow from "./RankingRow";
 
 describe("RankingRow", () => {
   it("should display player content", () => {
-    const player: PlayerRanking = {
+    const player: RankedPlayer = {
       name: "Testname",
       id: "id1",
       rank: 11,

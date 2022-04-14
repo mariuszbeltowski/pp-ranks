@@ -1,12 +1,12 @@
 import { gql } from "@apollo/client";
-import { PlayerRanking } from "../models/player";
+import { RankedPlayer } from "../models/player";
 
 export interface AddPlayerVariables {
   name: string;
 }
 
 export interface AddPlayerData {
-  addPlayer: PlayerRanking;
+  addPlayer: RankedPlayer;
 }
 
 export const ADD_PLAYER = gql`
@@ -26,8 +26,8 @@ export interface RegisterMatchScoreVariables {
 }
 
 interface RegisterMatchScore {
-  winningPlayer: PlayerRanking;
-  lostPlayer: PlayerRanking;
+  winningPlayer: RankedPlayer;
+  lostPlayer: RankedPlayer;
 }
 export interface RegisterMatchScoreData {
   registerMatchScore: RegisterMatchScore;

@@ -46,7 +46,7 @@ function RegisterMatchForm() {
             aria-label="winning-select"
           >
             <option value={EMPTY_SELECT}>Open this select menu</option>
-            {playersData?.players.map((player) => (
+            {playersData?.rankedPlayers.map((player) => (
               <option key={player.id} value={player.id}>
                 {player.name}
               </option>
@@ -65,7 +65,7 @@ function RegisterMatchForm() {
             aria-label="lost-select"
           >
             <option value={EMPTY_SELECT}>Open this select menu</option>
-            {playersData?.players.map((player) => (
+            {playersData?.rankedPlayers.map((player) => (
               <option key={player.id} value={player.id}>
                 {player.name}
               </option>

@@ -1,11 +1,11 @@
 import React from "react";
-import { PlayerRanking } from "../models/player";
+import { RankedPlayer } from "../models/player";
 
 interface Props {
-  player: PlayerRanking;
+  player: RankedPlayer;
 }
 
-export default function RankingRow(props: Props) {
+function RankingRow(props: Props) {
   const { player } = props;
 
   return (
@@ -22,3 +22,5 @@ export default function RankingRow(props: Props) {
     </tr>
   );
 }
+
+export default RankingRow;
