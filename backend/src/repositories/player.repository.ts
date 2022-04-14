@@ -8,10 +8,6 @@ export class PlayerRepository {
     private collection: Collection<Player>
   ) {}
 
-  async updatePlayerPoints(_id: string, points: number) {
-    return this.collection.updateOne({ _id }, { $set: { points } });
-  }
-
   async addPlayer(player: Player): Promise<InsertOneResult<Player>> {
     const { name } = player;
     const dbSession = this.dbClient.startSession();
