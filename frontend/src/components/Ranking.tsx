@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import React from "react";
 import { config } from "../config";
 import { PlayersRankingData, PLAYERS_RANKING } from "../queries/player-ranking";
+import RankingLoader from "./RankingLoader";
 import RankingRow from "./RankingRow";
 
 function Ranking() {
@@ -12,9 +13,6 @@ function Ranking() {
 
   if (error)
     return <div className="mx-auto max-w-md text-center">{error.message}</div>;
-
-  if (loading)
-    return <div className="mx-auto max-w-md text-center">Loading...</div>;
 
   return (
     <div className="flex flex-col mx-auto max-w-md md:max-w-2xl">
@@ -50,6 +48,7 @@ function Ranking() {
                 ))}
               </tbody>
             </table>
+            {loading ? <RankingLoader /> : <></>}
           </div>
         </div>
       </div>
