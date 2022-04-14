@@ -1,28 +1,18 @@
 import { ApolloError } from "apollo-server";
-import { Collection, MongoClient } from "mongodb";
 import { Player, mockPlayersNames } from "../models/player";
 import { RankedPlayer } from "../models/ranked-player";
+import { PlayerRepository } from "../repositories/player.repository";
 import { RankingService } from "./ranking";
 
 export class PlayerService {
   constructor(
-    private dbClient: MongoClient,
-    private collection: Collection<Player>,
+    private playerRepository: PlayerRepository,
     private rankingService: RankingService
   ) {}
 
-  async addPlayer(name: string) {
-    const existingPlayer = await this.collection.findOne({ name });
-
-    if (existingPlayer) {
-      throw new ApolloError(
-        `Player with name "${name}" already exists`,
-        "PLAYER_NAME_ALREADY_EXISTS"
-      );
-    }
-
+  async addPlayer(name: string): Promise<RankedPlayer> {
     const newPlayer = new Player(name);
-    const inserted = await this.collection.insertOne(newPlayer);
+    const inserted = await this.playerRepository.addPlayer(newPlayer);
 
     return (await this.getRankedPlayer(inserted.insertedId))!;
   }
@@ -32,12 +22,12 @@ export class PlayerService {
       throw new ApolloError("Provided players are the same", "SAME_PLAYERS");
     }
 
-    const dbSession = this.dbClient.startSession();
-    try {
-      await dbSession.withTransaction(async () => {
-        const winningPlayer = await this.collection.findOne({
-          _id: winningPlayerId,
-        });
+    await this.playerRepository.updatePlayers(
+      [winningPlayerId, lostPlayerId],
+      (players) => {
+        const winningPlayer = players.find(
+          (player) => player._id === winningPlayerId
+        );
 
         if (!winningPlayer) {
           throw new ApolloError(
@@ -46,9 +36,9 @@ export class PlayerService {
           );
         }
 
-        const lostPlayer = await this.collection.findOne({
-          _id: lostPlayerId,
-        });
+        const lostPlayer = players.find(
+          (player) => player._id === lostPlayerId
+        );
 
         if (!lostPlayer) {
           throw new ApolloError(
@@ -63,12 +53,12 @@ export class PlayerService {
             lostPlayer.points
           );
 
-        await this.updatePlayerPoints(winningPlayerId, winningPlayerPoints);
-        await this.updatePlayerPoints(lostPlayerId, lostPlayerPoints);
-      });
-    } finally {
-      dbSession.endSession();
-    }
+        return [
+          { ...winningPlayer, points: winningPlayerPoints },
+          { ...lostPlayer, points: lostPlayerPoints },
+        ];
+      }
+    );
 
     return {
       lostPlayer: (await this.getRankedPlayer(lostPlayerId))!,
@@ -76,18 +66,8 @@ export class PlayerService {
     };
   }
 
-  async updatePlayerPoints(_id: string, points: number) {
-    return this.collection.updateOne({ _id }, { $set: { points } });
-  }
-
   async getRankedPlayers() {
-    const players = await this.collection
-      .aggregate<Player>([
-        {
-          $sort: { points: -1 },
-        },
-      ])
-      .toArray();
+    const players = await this.playerRepository.getPlayersOrderedByPointsDesc();
 
     return players.map((player, index) => RankedPlayer.from(player, index + 1));
   }
@@ -98,12 +78,12 @@ export class PlayerService {
   }
 
   async removeAll() {
-    return this.collection.deleteMany({});
+    return this.playerRepository.purge();
   }
 
   async populateMockData() {
-    const mockPlayers = mockPlayersNames.map((name) => new Player(name));
-
-    return this.collection.insertMany(mockPlayers);
+    return this.playerRepository.addPlayers(
+      mockPlayersNames.map((name) => new Player(name))
+    );
   }
 }

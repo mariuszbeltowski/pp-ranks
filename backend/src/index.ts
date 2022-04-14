@@ -1,6 +1,7 @@
 import { ApolloServer } from "apollo-server";
 import { config } from "./config";
 import { Player } from "./models/player";
+import { PlayerRepository } from "./repositories/player.repository";
 import { getResolvers } from "./resolvers";
 import { createMongoDatabaseClient } from "./services/mongo";
 import { PlayerService } from "./services/player";
@@ -15,11 +16,9 @@ createMongoDatabaseClient().then(
     const playerCollection = db.collection<Player>(
       config.mongo.playersCollection
     );
-    const playerService = new PlayerService(
-      client,
-      playerCollection,
-      rankingService
-    );
+
+    const playerRepository = new PlayerRepository(client, playerCollection);
+    const playerService = new PlayerService(playerRepository, rankingService);
 
     await playerService.removeAll();
     console.log("All existing players were removed");
