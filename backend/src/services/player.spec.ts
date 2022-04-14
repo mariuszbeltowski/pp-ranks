@@ -1,37 +1,157 @@
 jest.mock("./ranking");
-jest.mock("mongodb");
+jest.mock("../repositories/player.repository");
 
-import { Collection, MongoClient } from "mongodb";
-import { Player } from "../models/player";
 import { PlayerService } from "./player";
 import { RankingService } from "./ranking";
+import { PlayerRepository } from "../repositories/player.repository";
+import { getMockedPlayer } from "../utils/player-mocks";
 
-const rankingServiceMock = new RankingService(
-  10
-) as jest.Mocked<RankingService>;
+const create = () => {
+  const rankingService = new RankingService(10) as jest.Mocked<RankingService>;
 
-const mongoClientMock = new MongoClient("") as jest.Mocked<MongoClient>;
-const collection = new Collection<Player>() as jest.Mocked<Collection<Player>>;
+  const playerRepository = new PlayerRepository(
+    {} as any,
+    {} as any
+  ) as jest.Mocked<PlayerRepository>;
 
-const create = () => new PlayerService({} as any, rankingServiceMock);
+  return {
+    rankingService,
+    playerRepository,
+    playerService: new PlayerService(playerRepository, rankingService),
+  };
+};
 
 describe("PlayerService", () => {
-  beforeEach(() => {
-    rankingServiceMock.calculatePlayersPoints.mockClear();
+  it("should add player and return", async () => {
+    const { playerService, playerRepository } = create();
+
+    const player = { name: "Player 1", points: 100, id: "player1" };
+    playerRepository.addPlayer.mockResolvedValueOnce({
+      insertedId: player.id,
+      acknowledged: true,
+    });
+
+    const players = [
+      getMockedPlayer(player),
+      getMockedPlayer({ name: "Player 2", points: 100, id: "player2" }),
+    ];
+
+    playerRepository.getPlayersOrderedByPointsDesc.mockResolvedValueOnce(
+      players
+    );
+
+    const rankedPlayer = await playerService.addPlayer("name");
+
+    expect(rankedPlayer.id).toBe(player.id);
+    expect(rankedPlayer.name).toBe(player.name);
+    expect(rankedPlayer.points).toBe(player.points);
   });
 
-  it("should add player", async () => {
-    const playerService = create();
-    collection.findOne.mockImplementationOnce(() => Promise.resolve(null));
+  it("should get ranked players with correct ranks", async () => {
+    const { playerService, playerRepository } = create();
 
-    collection.insertOne.mockImplementationOnce(() =>
-      Promise.resolve({
-        insertedId: "player1",
+    const players = [
+      getMockedPlayer({ name: "Player 3", points: 300, id: "player3" }),
+      getMockedPlayer({ name: "Player 2", points: 200, id: "player2" }),
+      getMockedPlayer({ name: "Player 1", points: 100, id: "player1" }),
+    ];
+
+    playerRepository.getPlayersOrderedByPointsDesc.mockResolvedValueOnce(
+      players
+    );
+
+    const rankedPlayers = await playerService.getRankedPlayers();
+
+    expect(rankedPlayers[0].id).toBe("player3");
+    expect(rankedPlayers[0].rank).toBe(1);
+  });
+
+  it("should purge to remove all", async () => {
+    const { playerService, playerRepository } = create();
+
+    await playerService.removeAll();
+
+    expect(playerRepository.purge).toHaveBeenCalledTimes(1);
+  });
+
+  it("should fail register match score for the same ids", async () => {
+    const { playerService } = create();
+
+    await expect(
+      playerService.registerMatchScore("p1", "p1")
+    ).rejects.toThrowError(/same/i);
+  });
+
+  it("should fail register match score if winner is not found", async () => {
+    const { playerService, playerRepository } = create();
+
+    const players = [
+      getMockedPlayer({ name: "Player 2", points: 200, id: "p2" }),
+    ];
+
+    await playerRepository.updatePlayers.mockImplementationOnce(
+      (_playerIds, cb) => {
+        cb(players);
+        return Promise.resolve();
+      }
+    );
+
+    await expect(
+      playerService.registerMatchScore("p1", "p2")
+    ).rejects.toThrowError(/winning/i);
+  });
+
+  it("should fail register match score if lost is not found", async () => {
+    const { playerService, playerRepository } = create();
+
+    const players = [
+      getMockedPlayer({ name: "Player 1", points: 100, id: "p1" }),
+    ];
+
+    playerRepository.updatePlayers.mockImplementationOnce((_playerIds, cb) => {
+      cb(players);
+      return Promise.resolve();
+    });
+
+    await expect(
+      playerService.registerMatchScore("p1", "p2")
+    ).rejects.toThrowError(/lost/i);
+  });
+
+  it("should register match score and update players", async () => {
+    const { playerService, playerRepository, rankingService } = create();
+
+    const winningId = "p1";
+    const lostId = "p2";
+
+    const players = [
+      getMockedPlayer({ name: "Player 1", points: 100, id: winningId }),
+      getMockedPlayer({ name: "Player 2", points: 100, id: lostId }),
+    ];
+
+    rankingService.calculatePlayersPoints.mockImplementation(
+      (winnerPoints, lostPoints) => ({
+        winningPlayerPoints: winnerPoints + 100,
+        lostPlayerPoints: lostPoints - 50,
       })
     );
 
-    // collection.aggregate.mockImplementationOnce(() => ({ toArray: () => {} }));
+    playerRepository.updatePlayers.mockImplementationOnce((_playerIds, cb) => {
+      const updatedPlayers = cb(players);
+      expect(updatedPlayers[0]._id).toBe(winningId);
+      expect(updatedPlayers[0].points).toBe(200);
 
-    const player = await playerService.addPlayer("name");
+      expect(updatedPlayers[1]._id).toBe(lostId);
+      expect(updatedPlayers[1].points).toBe(50);
+      return Promise.resolve();
+    });
+
+    playerRepository.getPlayersOrderedByPointsDesc.mockResolvedValue(players);
+
+    const { winningPlayer, lostPlayer } =
+      await playerService.registerMatchScore(winningId, lostId);
+
+    expect(winningPlayer.id).toBe(winningId);
+    expect(lostPlayer.id).toBe(lostId);
   });
 });
