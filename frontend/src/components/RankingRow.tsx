@@ -9,7 +9,7 @@ function RankingRow(props: Props) {
   const { player } = props;
 
   return (
-    <tr className="border-b">
+    <tr className="border-b motion-safe:fade-up">
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
         {player.rank}
       </td>
