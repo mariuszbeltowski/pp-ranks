@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useContext, useState } from "react";
 import { config } from "../config";
+import { LoginDataContext } from "../contexts/LoginData";
 import {
   RegisterMatchScoreData,
   RegisterMatchScoreVariables,
@@ -10,6 +11,11 @@ import { PlayersRankingData, PLAYERS_RANKING } from "../queries/player-ranking";
 import Loader from "./Loader";
 
 function RegisterMatchForm() {
+  const EMPTY_SELECT = "none";
+  const userContext = useContext(LoginDataContext);
+  const [winningPlayerId, setWinningPlayerId] = useState(EMPTY_SELECT);
+  const [lostPlayerId, setLostPlayerId] = useState(EMPTY_SELECT);
+
   const {
     data: playersData,
     error: playersError,
@@ -18,15 +24,16 @@ function RegisterMatchForm() {
     pollInterval: config.rankingPoolIntervalMs,
   });
 
-  const EMPTY_SELECT = "none";
-  const [winningPlayerId, setWinningPlayerId] = useState(EMPTY_SELECT);
-  const [lostPlayerId, setLostPlayerId] = useState(EMPTY_SELECT);
-
   const [registerMatch, { data, loading, error }] = useMutation<
     RegisterMatchScoreData,
     RegisterMatchScoreVariables
   >(REGISTER_MATCH_SCORE, {
     onError: () => console.log("Register match score mutation failed"),
+    context: {
+      headers: {
+        Authorization: userContext ? `Bearer ${userContext.login}` : "",
+      },
+    },
   });
 
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {

@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import AddPlayerForm from "../components/AddPlayerForm";
 import Header from "../components/Header";
+import Login from "../components/Login";
 import RegisterMatchForm from "../components/RegisterMatchForm";
+import { LoginDataProvider } from "../contexts/LoginData";
+import { LoginData } from "../queries/admin";
 
 function Admin() {
+  // const loginData = useContext(LoginDataContext);
+  const [loginData, setLoginData] = useState<LoginData | null>(null);
+
   return (
     <div>
       <Header />
       <div className="mx-auto max-w-md text-center">
         <h2 className="my-10 font-bold">Admin panel</h2>
-        <RegisterMatchForm />
-        <AddPlayerForm />
+        <LoginDataProvider value={loginData}>
+          {loginData ? (
+            <div>
+              <RegisterMatchForm />
+              <AddPlayerForm />
+            </div>
+          ) : (
+            <Login setLoginData={setLoginData} />
+          )}
+        </LoginDataProvider>
       </div>
     </div>
   );

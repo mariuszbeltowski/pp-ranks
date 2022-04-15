@@ -7,6 +7,8 @@ import { createMongoDatabaseClient } from "./utils/mongo";
 import { PlayerService } from "./services/player.service";
 import { RankingService } from "./services/ranking.service";
 import { typeDefs } from "./type-defs";
+import { UserService } from "./services/user.service";
+import { getContext } from "./context";
 
 createMongoDatabaseClient().then(
   async ({ client, db }) => {
@@ -20,6 +22,7 @@ createMongoDatabaseClient().then(
 
     const playerRepository = new PlayerRepository(client, playerCollection);
     const playerService = new PlayerService(playerRepository, rankingService);
+    const userService = new UserService();
 
     // Prepare the DB
     await playerService.removeAll();
@@ -29,9 +32,10 @@ createMongoDatabaseClient().then(
     console.log("Populated players collection with mocked names");
 
     // Setup API
-    const resolvers = getResolvers(playerService);
+    const resolvers = getResolvers(playerService, userService);
+    const context = getContext(userService);
 
-    const server = new ApolloServer({ typeDefs, resolvers });
+    const server = new ApolloServer({ typeDefs, resolvers, context });
 
     // Start the server
     server.listen().then(({ url }) => {

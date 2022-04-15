@@ -24,5 +24,7 @@ export const typeDefs = gql`
     ): RegisterMatchScoreResponse!
 
     addPlayer(name: String!): RankedPlayer!
+
+    login(username: String!, password: String!): String!
   }
 `;

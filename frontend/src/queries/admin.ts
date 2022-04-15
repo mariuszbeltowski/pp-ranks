@@ -54,3 +54,18 @@ export const REGISTER_MATCH_SCORE = gql`
     }
   }
 `;
+
+export interface LoginVariables {
+  username: string;
+  password: string;
+}
+
+export interface LoginData {
+  login: string;
+}
+
+export const LOGIN = gql`
+  mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password)
+  }
+`;
