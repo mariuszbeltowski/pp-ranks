@@ -1,7 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import { useAddPlayer } from "../queries/AddPlayer";
-
-import Loader from "./Loader";
+import FormSubmitButton from "./FormSubmitButton";
 
 function AddPlayerForm() {
   const [name, setName] = useState("");
@@ -52,16 +51,12 @@ function AddPlayerForm() {
             <></>
           )}
         </div>
-        <button
-          type="submit"
-          disabled={loading || name.length === 0}
-          aria-label="create-button"
-          className="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg
-            focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg
-              transition duration-150 ease-in-out disabled:opacity-75"
-        >
-          {loading ? <Loader /> : <span>Create</span>}
-        </button>
+        <FormSubmitButton
+          loading={loading}
+          text={"Create"}
+          label={"create-button"}
+          disabled={loading || !name}
+        />
       </form>
     </div>
   );

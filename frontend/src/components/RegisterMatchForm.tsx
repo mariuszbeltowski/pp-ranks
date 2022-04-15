@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from "react";
 import { useRegisterMatchScore } from "../queries/RegisterMatchScore";
 import { useRanking } from "../queries/Ranking";
-import Loader from "./Loader";
+import FormSubmitButton from "./FormSubmitButton";
 
 function RegisterMatchForm() {
   const EMPTY_SELECT = "none";
@@ -90,20 +90,16 @@ function RegisterMatchForm() {
         ) : (
           <></>
         )}
-        <button
-          type="submit"
+        <FormSubmitButton
+          loading={loading}
+          text={"Register match"}
+          label={"register-button"}
           disabled={
             loading ||
             winningPlayerId === EMPTY_SELECT ||
             lostPlayerId === EMPTY_SELECT
           }
-          aria-label="register-button"
-          className="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg
-            focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg
-              transition duration-150 ease-in-out disabled:opacity-75"
-        >
-          {loading ? <Loader /> : <span>Register match</span>}
-        </button>
+        />
       </form>
     </div>
   );

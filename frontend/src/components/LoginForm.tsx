@@ -1,12 +1,12 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { LoginData, useLogin } from "../queries/Login";
-import Loader from "./Loader";
+import FormSubmitButton from "./FormSubmitButton";
 
 interface Props {
   setLoginData: (value: LoginData) => void;
 }
 
-function Login({ setLoginData }: Props) {
+function LoginForm({ setLoginData }: Props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [login, { data, loading, error }] = useLogin();
@@ -15,7 +15,7 @@ function Login({ setLoginData }: Props) {
     if (data) {
       setLoginData(data);
     }
-  }, [data]);
+  }, [data, setLoginData]);
 
   const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,17 +71,15 @@ function Login({ setLoginData }: Props) {
         ) : (
           <></>
         )}
-        <button
-          type="submit"
-          className="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase
-            rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none
-            focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out disabled:opacity-75"
-        >
-          {loading ? <Loader /> : <span>Sign in</span>}
-        </button>
+        <FormSubmitButton
+          loading={loading}
+          text={"Login"}
+          label={"login-button"}
+          disabled={!username || !password || loading}
+        />
       </form>
     </div>
   );
 }
 
-export default Login;
+export default LoginForm;

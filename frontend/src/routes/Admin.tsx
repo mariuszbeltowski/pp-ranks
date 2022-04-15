@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AddPlayerForm from "../components/AddPlayerForm";
 import Header from "../components/Header";
-import Login from "../components/Login";
+import LoginForm from "../components/LoginForm";
 import RegisterMatchForm from "../components/RegisterMatchForm";
 import { LoginDataProvider } from "../contexts/LoginData";
 import { LoginData } from "../queries/Login";
@@ -21,7 +21,7 @@ function Admin() {
               <AddPlayerForm />
             </div>
           ) : (
-            <Login setLoginData={setLoginData} />
+            <LoginForm setLoginData={setLoginData} />
           )}
         </LoginDataProvider>
       </div>
