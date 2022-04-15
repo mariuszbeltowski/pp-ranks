@@ -1,6 +1,5 @@
-import { useMutation } from "@apollo/client";
-import React, { FormEvent, useContext, useEffect, useState } from "react";
-import { LOGIN, LoginData, LoginVariables } from "../queries/admin";
+import React, { FormEvent, useEffect, useState } from "react";
+import { LoginData, useLogin } from "../queries/login";
 import Loader from "./Loader";
 
 interface Props {
@@ -10,11 +9,7 @@ interface Props {
 function Login({ setLoginData }: Props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const [login, { data, loading, error }] = useMutation<
-    LoginData,
-    LoginVariables
-  >(LOGIN, { onError: () => console.log("Add player mutation failed") });
+  const [login, { data, loading, error }] = useLogin();
 
   useEffect(() => {
     if (data) {

@@ -1,29 +1,12 @@
-import { useMutation } from "@apollo/client";
-import React, { FormEvent, useContext, useState } from "react";
-import { LoginDataContext } from "../contexts/LoginData";
-import {
-  AddPlayerData,
-  AddPlayerVariables,
-  ADD_PLAYER,
-} from "../queries/admin";
+import React, { FormEvent, useState } from "react";
+import { useAddPlayer } from "../queries/add-player";
+
 import Loader from "./Loader";
 
 function AddPlayerForm() {
   const [name, setName] = useState("");
-  const userContext = useContext(LoginDataContext);
 
-  const [addPlayer, { data, loading, error }] = useMutation<
-    AddPlayerData,
-    AddPlayerVariables
-  >(ADD_PLAYER, {
-    onError: () => console.log("Add player mutation failed"),
-    context: {
-      headers: {
-        Authorization: userContext ? `Bearer ${userContext.login}` : "",
-      },
-    },
-  });
-
+  const [addPlayer, { data, loading, error }] = useAddPlayer();
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (name.length > 0 && !loading) {

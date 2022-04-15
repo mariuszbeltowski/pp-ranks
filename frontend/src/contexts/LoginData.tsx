@@ -1,8 +1,7 @@
-import { createContext, PropsWithChildren, useState } from "react";
-import { LoginData } from "../queries/admin";
+import { createContext, PropsWithChildren } from "react";
+import { LoginData } from "../queries/login";
 
 export const LoginDataContext = createContext<LoginData | null>(null);
-
 interface ILoginDataProvider {
   value: LoginData | null;
 }

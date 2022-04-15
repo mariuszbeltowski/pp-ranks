@@ -19,7 +19,7 @@ Adminpanel (/admin):
 
 Others:
 
-- Ranking has pooling interval 500ms by default
+- Ranking has pooling interval 1000ms by default
 - Both form buttons have loader and server side validation.
 
 ## Tech stack

@@ -1,13 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import AddPlayerForm from "../components/AddPlayerForm";
 import Header from "../components/Header";
 import Login from "../components/Login";
 import RegisterMatchForm from "../components/RegisterMatchForm";
 import { LoginDataProvider } from "../contexts/LoginData";
-import { LoginData } from "../queries/admin";
+import { LoginData } from "../queries/login";
 
 function Admin() {
-  // const loginData = useContext(LoginDataContext);
   const [loginData, setLoginData] = useState<LoginData | null>(null);
 
   return (

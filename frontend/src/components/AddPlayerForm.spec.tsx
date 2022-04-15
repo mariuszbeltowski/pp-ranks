@@ -2,9 +2,9 @@ import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { getMockPlayerRanking } from "../lib/player-mock";
 import AddPlayerForm from "./AddPlayerForm";
-import { ADD_PLAYER } from "../queries/admin";
 import userEvent from "@testing-library/user-event";
 import { GraphQLError } from "graphql";
+import { ADD_PLAYER } from "../queries/add-player";
 
 const playerName = "player1";
 const mockedPlayer = getMockPlayerRanking("1", playerName);

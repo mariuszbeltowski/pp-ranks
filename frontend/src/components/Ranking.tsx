@@ -1,15 +1,10 @@
-import { useQuery } from "@apollo/client";
 import React from "react";
-import { config } from "../config";
-import { PlayersRankingData, PLAYERS_RANKING } from "../queries/player-ranking";
+import { useRankingQuery } from "../queries/player-ranking";
 import RankingLoader from "./RankingLoader";
 import RankingRow from "./RankingRow";
 
 function Ranking() {
-  const { loading, error, data } = useQuery<PlayersRankingData>(
-    PLAYERS_RANKING,
-    { pollInterval: config.rankingPoolIntervalMs }
-  );
+  const { loading, error, data } = useRankingQuery();
 
   if (error)
     return <div className="mx-auto max-w-md text-center">{error.message}</div>;
