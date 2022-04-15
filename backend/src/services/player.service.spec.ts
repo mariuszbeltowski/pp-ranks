@@ -10,8 +10,8 @@ const setup = () => {
   const rankingService = new RankingService(10) as jest.Mocked<RankingService>;
 
   const playerRepository = new PlayerRepository(
-    {} as any,
-    {} as any
+    {} as any, // eslint-disable-line
+    {} as any // eslint-disable-line
   ) as jest.Mocked<PlayerRepository>;
 
   return {

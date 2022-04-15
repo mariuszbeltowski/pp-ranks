@@ -14,7 +14,7 @@ export class PlayerService {
     const newPlayer = new Player(name);
     const inserted = await this.playerRepository.addPlayer(newPlayer);
 
-    return (await this.getRankedPlayer(inserted.insertedId))!;
+    return this.getRankedPlayer(inserted.insertedId);
   }
 
   async registerMatchScore(winningPlayerId: string, lostPlayerId: string) {
@@ -61,8 +61,8 @@ export class PlayerService {
     );
 
     return {
-      lostPlayer: (await this.getRankedPlayer(lostPlayerId))!,
-      winningPlayer: (await this.getRankedPlayer(winningPlayerId))!,
+      lostPlayer: await this.getRankedPlayer(lostPlayerId),
+      winningPlayer: await this.getRankedPlayer(winningPlayerId),
     };
   }
 
@@ -74,7 +74,15 @@ export class PlayerService {
 
   async getRankedPlayer(id: string) {
     const rankedPlayers = await this.getRankedPlayers();
-    return rankedPlayers.filter((player) => player.id === id).at(0);
+    const rankedPlayer = rankedPlayers
+      .filter((player) => player.id === id)
+      .at(0);
+
+    if (!rankedPlayer) {
+      throw new ApolloError(`Player with id ${id} not found`);
+    }
+
+    return rankedPlayer;
   }
 
   async removeAll() {

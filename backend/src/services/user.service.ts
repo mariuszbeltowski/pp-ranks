@@ -2,7 +2,7 @@ import { hashSync, compare } from "bcrypt";
 import { config } from "../config";
 import { sign, verify } from "jsonwebtoken";
 import { User } from "../models/user";
-import { GraphQLBoolean, GraphQLError } from "graphql";
+import { GraphQLError } from "graphql";
 
 export class UserService {
   private adminUser = {
@@ -10,8 +10,6 @@ export class UserService {
     password: hashSync("toor", config.bcryptSaltRounds),
     username: "root",
   };
-
-  constructor() {}
 
   async login(username: string, password: string) {
     if (username !== this.adminUser.username) {
