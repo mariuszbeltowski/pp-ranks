@@ -63,9 +63,11 @@ Use docker with mongodb `docker run --rm -p 27017:27017 --name mongodb mongo:5.0
 - Go to `/frontend`
 - Install dependencies with `yarn` or `npm install`
 - Run dev server with `yarn start` or `npm run start`
+- (Optional) Edit config - all config consts are located in `frontend/src/config.ts`
 
 ### Backend
 
 - Go to `/backend`
 - Install dependencies with `yarn` or `npm install`
 - Run dev server with `yarn start` or `npm run start`
+- (Optional) Set env variables - all variables are located in `backend/src/config.ts`

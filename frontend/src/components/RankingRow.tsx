@@ -5,19 +5,17 @@ interface Props {
   player: RankedPlayer;
 }
 
-function RankingRow(props: Props) {
-  const { player } = props;
-
+function RankingRow({ player: { rank, name, points } }: Props) {
   return (
     <tr className="border-b motion-safe:fade-up">
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-        {player.rank}
+        {rank}
       </td>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-        {player.name}
+        {name}
       </td>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-        {player.points}
+        {points}
       </td>
     </tr>
   );
