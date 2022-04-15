@@ -4,7 +4,7 @@ import { getMockPlayerRanking } from "../lib/player-mock";
 import AddPlayerForm from "./AddPlayerForm";
 import userEvent from "@testing-library/user-event";
 import { GraphQLError } from "graphql";
-import { ADD_PLAYER } from "../queries/add-player";
+import { ADD_PLAYER } from "../queries/AddPlayer";
 
 const playerName = "player1";
 const mockedPlayer = getMockPlayerRanking("1", playerName);

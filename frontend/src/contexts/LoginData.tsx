@@ -1,5 +1,5 @@
 import { createContext, PropsWithChildren } from "react";
-import { LoginData } from "../queries/login";
+import { LoginData } from "../queries/Login";
 
 export const LoginDataContext = createContext<LoginData | null>(null);
 interface ILoginDataProvider {

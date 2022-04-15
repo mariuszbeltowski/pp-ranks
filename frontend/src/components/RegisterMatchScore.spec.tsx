@@ -8,7 +8,7 @@ import {
   mockedPlayersData,
   mockedPlayersErrorData,
 } from "../lib/player-mock";
-import { REGISTER_MATCH_SCORE } from "../queries/register-match-score";
+import { REGISTER_MATCH_SCORE } from "../queries/RegisterMatchScore";
 import RegisterMatchForm from "./RegisterMatchForm";
 
 const winningPlayer = mockedPlayers[0];

@@ -1,7 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
-import { useContext } from "react";
-import { LoginDataContext } from "../contexts/LoginData";
 import { RankedPlayer } from "../models/player";
+import useAuthContext from "./AuthContext";
 
 export interface AddPlayerVariables {
   name: string;
@@ -23,14 +22,10 @@ export const ADD_PLAYER = gql`
 `;
 
 export function useAddPlayer() {
-  const userContext = useContext(LoginDataContext);
+  const context = useAuthContext();
 
   return useMutation<AddPlayerData, AddPlayerVariables>(ADD_PLAYER, {
     onError: () => console.log("Add player mutation failed"),
-    context: {
-      headers: {
-        Authorization: userContext ? `Bearer ${userContext.login}` : "",
-      },
-    },
+    context,
   });
 }

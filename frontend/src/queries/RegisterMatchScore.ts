@@ -1,7 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
-import { useContext } from "react";
-import { LoginDataContext } from "../contexts/LoginData";
 import { RankedPlayer } from "../models/player";
+import useAuthContext from "./AuthContext";
 
 export interface RegisterMatchScoreVariables {
   winningPlayerId: string;
@@ -39,17 +38,13 @@ export const REGISTER_MATCH_SCORE = gql`
 `;
 
 export function useRegisterMatchScore() {
-  const userContext = useContext(LoginDataContext);
+  const context = useAuthContext();
 
   return useMutation<RegisterMatchScoreData, RegisterMatchScoreVariables>(
     REGISTER_MATCH_SCORE,
     {
       onError: () => console.log("Register match score mutation failed"),
-      context: {
-        headers: {
-          Authorization: userContext ? `Bearer ${userContext.login}` : "",
-        },
-      },
+      context,
     }
   );
 }

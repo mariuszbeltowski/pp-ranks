@@ -16,7 +16,7 @@ export const PLAYERS_RANKING = gql`
   }
 `;
 
-export function useRankingQuery() {
+export function useRanking() {
   return useQuery<PlayersRankingData>(PLAYERS_RANKING, {
     pollInterval: config.rankingPoolIntervalMs,
   });

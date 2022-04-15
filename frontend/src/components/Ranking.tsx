@@ -1,10 +1,10 @@
 import React from "react";
-import { useRankingQuery } from "../queries/player-ranking";
+import { useRanking } from "../queries/Ranking";
 import RankingLoader from "./RankingLoader";
 import RankingRow from "./RankingRow";
 
 function Ranking() {
-  const { loading, error, data } = useRankingQuery();
+  const { loading, error, data } = useRanking();
 
   if (error)
     return <div className="mx-auto max-w-md text-center">{error.message}</div>;

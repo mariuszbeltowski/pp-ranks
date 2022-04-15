@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { LoginData, useLogin } from "../queries/login";
+import { LoginData, useLogin } from "../queries/Login";
 import Loader from "./Loader";
 
 interface Props {

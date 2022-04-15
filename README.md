@@ -14,13 +14,15 @@ Homepage (/):
 
 Adminpanel (/admin):
 
+- Login (credentials: root / toor)
 - Add new player
 - Register match score
 
 Others:
 
+- Ranking list provide blind content loader in case of slow connection
 - Ranking has pooling interval 1000ms by default
-- Both form buttons have loader and server side validation.
+- Both forms use loader and server side validation.
 
 ## Tech stack
 

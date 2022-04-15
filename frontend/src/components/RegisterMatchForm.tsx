@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
-import { useRegisterMatchScore } from "../queries/register-match-score";
-import { useRankingQuery } from "../queries/player-ranking";
+import { useRegisterMatchScore } from "../queries/RegisterMatchScore";
+import { useRanking } from "../queries/Ranking";
 import Loader from "./Loader";
 
 function RegisterMatchForm() {
@@ -12,7 +12,7 @@ function RegisterMatchForm() {
     data: playersData,
     error: playersError,
     loading: playersLoading,
-  } = useRankingQuery();
+  } = useRanking();
 
   const [registerMatch, { data, loading, error }] = useRegisterMatchScore();
 

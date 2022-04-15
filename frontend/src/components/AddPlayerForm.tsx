@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from "react";
-import { useAddPlayer } from "../queries/add-player";
+import { useAddPlayer } from "../queries/AddPlayer";
 
 import Loader from "./Loader";
 

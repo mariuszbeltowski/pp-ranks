@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import Login from "../components/Login";
 import RegisterMatchForm from "../components/RegisterMatchForm";
 import { LoginDataProvider } from "../contexts/LoginData";
-import { LoginData } from "../queries/login";
+import { LoginData } from "../queries/Login";
 
 function Admin() {
   const [loginData, setLoginData] = useState<LoginData | null>(null);

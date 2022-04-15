@@ -1,6 +1,6 @@
 import { GraphQLError } from "graphql";
 import { RankedPlayer } from "../models/player";
-import { PLAYERS_RANKING } from "../queries/player-ranking";
+import { PLAYERS_RANKING } from "../queries/Ranking";
 
 export const mockedPlayers: RankedPlayer[] = [
   getMockPlayerRanking("1", "player1"),
