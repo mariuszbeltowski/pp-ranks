@@ -96,7 +96,7 @@ describe("AddPlayerForm", () => {
       findLostSelect,
       setWinningSelect,
       setLostSelect,
-    } = setup([mockedPlayersData]);
+    } = setup([mockedPlayersData, mockedPlayersData]);
 
     await setWinningSelect(winningPlayer.name);
     await setLostSelect(lostPlayer.name);
